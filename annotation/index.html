@@ -18,35 +18,7 @@
 	var videos = document.getElementsByTagName("video");
 	var text = document.getElementById("lyrics");
 	var video = videos[0];
-
-	// var lyrics = "
-	// 				 will very nearly jump out of his skin\
-	// 				Say buzz buzz just like the wasps thSay Shoo shoo and stick him with a pin\
-	// 				Bogeymanat sting\
-	// 				Bogeyman will think you are an elephant with wings\
-	// 				Hush, hush, hush, here comes the Bogeyman\
-	// 				Tell him you've got soldiers in your bed\
-	// 				For he will never guess that they are only made of lead\
-	// 				Say Hush hush, he'll think that you're asleep\
-	// 				If you make a lovely snore away he'll softly creep\
-	// 				Sing this tune you children one and all\
-	// 				Bogeyman will run away, he'll think it's Henry Hall!\
-	// 				When the shadows of the evening creep across the sky\
-	// 				And your Mummy comes upstairs to sing a lullaby\
-	// 				Tell her that the bogeyman no longer frightens you\
-	// 				Uncle Henry's very kindly told you what to do\
-	// 				Hush, hush, hush, here comes the Bogeyman\
-	// 				Don't let him come too close to you, He'll catch you if he can.\
-	// 				Just pretend your teddy bear's a dog\
-	// 				Then shout out, 'Fetch him, Teddy!' and he'll hop off like a frog.\
-	// 				Say Meoow, pretend that you're a cat\
-	// 				He'll think you may scratch him that make him fall down flat\
-	// 				Just pretend he isn't really there\
-	// 				You will find that Bogey man will vanish in thin air\
-	// 				Here's one way to catch him without fail\
-	// 				Just keep a little salt with you\
-	// 				and put it on his tail"
-
+	
 	function addLyrics()
 	{
 		var br = "<br />";
@@ -70,32 +42,35 @@
 			text.innerHTML = "Hush, hush, hush, here comes the Bogeyman" + br +
 							"Tell him you've got soldiers in your bed" + br +
 							"For he will never guess that they are only made of lead" + br;
-		else if (time >= 81 && time < 96)
+		else if (time >= 80 && time < 96)
 			text.innerHTML = "Say Hush hush, he'll think that you're asleep" + br +
 							"If you make a lovely snore away he'll softly creep" + br +
 							"Sing this tune you children one and all" + br +
 							"Bogeyman will run away, he'll think it's Henry Hall!" + br;
-
+		else if (time >= 96 && time < 111)
+			text.innerHTML = "When the shadows of the evening creep across the sky" + br +
+							"And your Mummy comes upstairs to sing a lullaby" + br +
+							"Tell her that the bogeyman no longer frightens you" + br +
+							"Uncle Henry's very kindly told you what to do" + br;
+		else if (time >= 111 && time < 127)
+			text.innerHTML = "Hush, hush, hush, here comes the Bogeyman" + br +
+							"Don't let him come too close to you, He'll catch you if he can." + br +
+							"Just pretend your teddy bear's a dog" + br +
+							"Then shout out, 'Fetch him, Teddy!' and he'll hop off like a frog." + br;
+		else if (time >= 135 && time < 150)
+			text.innerHTML = "Say Meoow, pretend that you're a cat" + br +
+							"He'll think you may scratch him that make him fall down flat" + br +
+							"Just pretend he isn't really there" + br +
+							"You will find that Bogey man will vanish in thin air" + br;
+		else if (time >= 159)
+			text.innerHTML = "Here's one way to catch him without fail" + br +
+							"Just keep a little salt with you" + br +
+							"and put it on his tail" + br;
 		else
 			text.innerHTML = " ";
-
 	}
 
 	video.addEventListener('timeupdate', addLyrics);
-
- 
-
-	
-
-
-	//console.log(video.currentTime);
-	// if (video.currentTime < 14)
-	// {
-	// 	document.getElementById("lyrics").HTML = "Children have You ever met the Bogeyman before";
-
-	// }
-
-
 
 </script>
 </body>
