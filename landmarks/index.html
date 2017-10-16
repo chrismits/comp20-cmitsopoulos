@@ -6,8 +6,8 @@
 	<title>Landmarks</title>
 	<link rel="stylesheet" href="style.css"/>
 	<meta charset="utf-8"/>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
- 
+	<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOozmjOyAPx4__-X08wI_ZPsegAdGtQYM&callback=initMap" type="text/javascript"></script>
 </head>
 
 <body onload="initMap()">
@@ -18,11 +18,6 @@
 	lat = 0;
 	lng = 0;
 	var me = new google.maps.LatLng(lat, lng);
-	var options = {
-		zoom: 13,
-		center: me,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	};
 
 	function initMap() {
 		var map = new google.maps.Map(document.getElementById('map'), options);
@@ -47,6 +42,12 @@
 		me = new google.maps.LatLng(lat, lng);
 		map.panTo(me);
 	}
+
+	var options = {
+		zoom: 13,
+		center: me,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
 
 	//SEND AND RECEIVE DATA FROM HEROKU APP
 	request = new XMLHttpRequest();
