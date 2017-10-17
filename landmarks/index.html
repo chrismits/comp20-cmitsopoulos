@@ -1,38 +1,17 @@
 <!DOCTYPE HTML>
-
 <html>
 
 <head>
 	<title>Landmarks</title>
 	<link rel="stylesheet" href="style.css"/>
 	<meta charset="utf-8"/>
-	<!-- <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOozmjOyAPx4__-X08wI_ZPsegAdGtQYM&callback=initMap" type="text/javascript"></script> -->
 </head>
 
 <body onload="initMap()">
 	<div id="map"></div>
 </body>
 
-<script src= "getMap.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7vpY8pfR-2RTdUUou4sF_oAScaZXEDSE&callback=initMap"
- async defer></script>
-
-<script>	
-	//SEND AND RECEIVE DATA FROM HEROKU APP
-	request = new XMLHttpRequest();
-	request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
-	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-	var dataObj;
-	request.onreadystatechange = function() {
-		if (request.readyState == 4 && request.status == 200)
-			var dataObj = JSON.parse(this.responseText);
-			console.log(dataObj);
-	}
-
-	request.send("login=uKLkLPxv&lat=" + lat + "&lng=" + lng);
-</script>
-
+<script src= "getMap.js"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7vpY8pfR-2RTdUUou4sF_oAScaZXEDSE&callback=initMap"></script>
 
 </html>
