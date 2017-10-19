@@ -4,6 +4,7 @@ lat = 42.40685441146812;
 lng = -71.11905097961426;
 var me;
 var map;
+var infoWindow;
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -20,11 +21,22 @@ function getLocation()
 		navigator.geolocation.getCurrentPosition(function(position) {
 			lat = position.coords.latitude;
 			lng = position.coords.longitude;
+
+			console.log(lat == 42.40685441146812);
+			console.log(lng == -71.11905097961426);
+
 			render();
 		});
 	}
 	else
 		alert("Geolocation not supported in this browser!");
+}
+
+function showInfoWindow(marker) {
+	google.maps.event.addListener(marker, 'click', function () {
+	                    infoWindow.setContent(this.info);
+	                    infoWindow.open(map, this);
+	                });
 }
 
 var myMarker = 'me.png';
@@ -33,12 +45,16 @@ function render() {
 	map.panTo(me);
 
 	// Create a marker
-	marker = new google.maps.Marker({
+	var marker = new google.maps.Marker({
 		position: me,
 		animation: google.maps.Animation.DROP,
 		title: "My Location",
-		icon: myMarker
+		icon: myMarker,
+		info: "My Location"
 	});
+
+	infoWindow = new google.maps.InfoWindow({});
+	showInfoWindow(marker);
 	marker.setMap(map);
 	getServerData();
 }
@@ -68,16 +84,18 @@ function userMarkers() {
 		theirLat = dataObj.people[i].lat;
 		theirLng = dataObj.people[i].lng;
 		var location = new google.maps.LatLng(theirLat, theirLng);
-		var marker = new google.maps.Marker({
+		var usermarker = new google.maps.Marker({
 			position: location,
 			title: "Other location",
 		});
-		marker.setMap(map);
+		usermarker.setMap(map);
+		showInfoWindow(usermarker);
 	}
 }
 
 var lm = 'landmarker.png';
 
+//markers for landmarks
 function lmMarkers() {
 	for (k = 0; k < dataObj.landmarks.length; ++k) {
 		landLat = dataObj.landmarks[k].geometry.coordinates[1];
@@ -86,16 +104,13 @@ function lmMarkers() {
 		var landmarker = new google.maps.Marker({
 			position: landloc,
 			title: "Landmark Location",
-			icon: lm
+			icon: lm,
+			info: dataObj.landmarks[k].properties.Details
 		});
 		landmarker.setMap(map);
+		showInfoWindow(landmarker);
 	}
 }
-
-
-
-
-
 
 
 
