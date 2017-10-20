@@ -1,9 +1,9 @@
 //Credit to comp20 examples in github.com/tuftsdev
-
 lat = 42.40685441146812;
 lng = -71.11905097961426;
 var me;
 var map;
+var marker;
 var infoWindow;
 var myMarker = 'me.png';
 var lm = 'landmarker.png';
@@ -33,9 +33,9 @@ function getLocation()
 
 function showInfoWindow(marker) {
 	google.maps.event.addListener(marker, 'click', function () {
-	                    infoWindow.setContent(this.info);
-	                    infoWindow.open(map, this);
-	                });
+        infoWindow.setContent(this.info);
+        infoWindow.open(map, this);
+	});
 }
 
 function render() {
@@ -43,12 +43,12 @@ function render() {
 	map.panTo(me);
 
 	// Create a marker
-	var marker = new google.maps.Marker({
+	marker = new google.maps.Marker({
 		position: me,
 		animation: google.maps.Animation.DROP,
 		title: "My Location",
 		icon: myMarker,
-		info: "My Location"
+		info: "Temp"
 	});
 
 	infoWindow = new google.maps.InfoWindow({});
@@ -69,6 +69,7 @@ function getServerData()
 		if (this.readyState == 4 && this.status == 200) {
 			dataObj = JSON.parse(this.responseText);
 			console.log(dataObj);
+			smallestDistanceToLandmark();
 			userMarkers();
 			lmMarkers();
 		}
@@ -90,22 +91,40 @@ function getDistance(p1, p2) {
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	var d = R * c;
 	d = d * 0.000621371;
-	d = d.toFixed(5);
 	return d; // returns the distance in miles
+}
+
+function smallestDistanceToLandmark() {
+	var smallestDist = 50000000;
+	var index;
+	var myLoc = new google.maps.LatLng(lat, lng);
+	for (j = 0; j < dataObj.landmarks.length; ++j)
+	{
+		lmLat = dataObj.landmarks[j].geometry.coordinates[1];
+		lmLng = dataObj.landmarks[j].geometry.coordinates[0];
+		var lmloc = new google.maps.LatLng(lmLat, lmLng);
+		var currDistance = getDistance(lmloc, myLoc);
+		if (currDistance < smallestDist)
+		{
+			smallestDist = index;
+			index = j;
+		}
+	}
+	
+	marker.info = "<b> Me! <br>Closest Landmark: </b>" + dataObj.landmarks[index].properties.Location_Name;
 }
 
 //create markers for people
 function userMarkers() {
-	// console.log(lat == 42.40685441146812);
-	// console.log(lng == -71.11905097961426);
-
 	var myLocation = new google.maps.LatLng(lat, lng);
 
 	for (i = 0; i < dataObj.people.length; ++i) {
 		theirLat = dataObj.people[i].lat;
 		theirLng = dataObj.people[i].lng;
 		var location = new google.maps.LatLng(theirLat, theirLng);
-		var dist = getDistance(location, myLocation)
+		var dist = getDistance(location, myLocation);
+		dist = dist.toFixed(5);
+
 		var usermarker = new google.maps.Marker({
 			position: location,
 			title: "Other location",
@@ -114,6 +133,7 @@ function userMarkers() {
 		});
 		usermarker.setMap(map);
 		showInfoWindow(usermarker);
+
 	}
 }
 
@@ -133,6 +153,7 @@ function lmMarkers() {
 		showInfoWindow(landmarker);
 	}
 }
+
 
 
 
