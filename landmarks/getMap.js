@@ -23,7 +23,6 @@ function getLocation()
 		navigator.geolocation.getCurrentPosition(function(position) {
 			lat = position.coords.latitude;
 			lng = position.coords.longitude;
-
 			render();
 		});
 	}
@@ -42,7 +41,6 @@ function render() {
 	me = new google.maps.LatLng(lat, lng);
 	map.panTo(me);
 
-	// Create a marker
 	marker = new google.maps.Marker({
 		position: me,
 		animation: google.maps.Animation.DROP,
@@ -68,7 +66,6 @@ function getServerData()
 	request.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			dataObj = JSON.parse(this.responseText);
-			console.log(dataObj);
 			smallestDistanceToLandmark();
 			userMarkers();
 			lmMarkers();
@@ -77,12 +74,11 @@ function getServerData()
 	request.send("login=uKLkLPxv&lat=" + lat + "&lng=" + lng);
 }
 
-//Snippet taken from https://stackoverflow.com/questions/1502590/calculate-distance-between-two-points-in-google-maps-v3
 function getDistance(p1, p2) {
 	var rad = function(x) {
 		return x * Math.PI / 180;
 	};
-	var R = 6378137; // Earth’s mean radius in meter
+	var R = 6378137;
 	var dLat = rad(p2.lat() - p1.lat());
 	var dLong = rad(p2.lng() - p1.lng());
 	var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -91,13 +87,14 @@ function getDistance(p1, p2) {
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	var d = R * c;
 	d = d * 0.000621371;
-	return d; // returns the distance in miles
+	return d; 
 }
 
 function smallestDistanceToLandmark() {
 	var smallestDist = 50000000;
 	var index;
 	var myLoc = new google.maps.LatLng(lat, lng);
+	var goodLoc;
 	for (j = 0; j < dataObj.landmarks.length; ++j)
 	{
 		lmLat = dataObj.landmarks[j].geometry.coordinates[1];
@@ -106,15 +103,23 @@ function smallestDistanceToLandmark() {
 		var currDistance = getDistance(lmloc, myLoc);
 		if (currDistance < smallestDist)
 		{
-			smallestDist = index;
+			smallestDist = currDistance;
 			index = j;
+			goodLoc = lmloc;
 		}
 	}
 	
-	marker.info = "<b> Me! <br>Closest Landmark: </b>" + dataObj.landmarks[index].properties.Location_Name;
+	smallestDist = smallestDist.toFixed(5);
+	marker.info = "<b> Me! <br>Closest Landmark: </b>" + dataObj.landmarks[index].properties.Location_Name
+	+ "<br>" + "<b> Distance to Landmark: </b>" + smallestDist + " miles";
+	var path = new google.maps.Polyline({
+		path: [myLoc, goodLoc],
+		strokeColor: '#ff0000' 
+	});
+
+	path.setMap(map);
 }
 
-//create markers for people
 function userMarkers() {
 	var myLocation = new google.maps.LatLng(lat, lng);
 
@@ -137,7 +142,6 @@ function userMarkers() {
 	}
 }
 
-//markers for landmarks
 function lmMarkers() {
 	for (k = 0; k < dataObj.landmarks.length; ++k) {
 		landLat = dataObj.landmarks[k].geometry.coordinates[1];
