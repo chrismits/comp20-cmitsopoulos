@@ -28,6 +28,7 @@
                     return "Sat";
             }
         }
+        
         function findMonth() {
             var monthNumeric = currentDate.getMonth() + 1;
             switch(monthNumeric) {
@@ -72,7 +73,8 @@
             elem = document.getElementById("log");
             output = "";
             for (key = localStorage.length; key >= 0; key--) {
-                output = output + "<p>" + localStorage.getItem(key) + "</p>\n";
+                if (localStorage.getItem(key))
+                    output = output + "<p>" + localStorage.getItem(key) + "</p>\n";
             }
 
             elem.innerHTML = output;
