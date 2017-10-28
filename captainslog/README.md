@@ -1,4 +1,4 @@
-#Lab: Captain's Log
+# Lab: Captain's Log
 
 Data Persistence via local storage
 
