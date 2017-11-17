@@ -8,6 +8,7 @@ var infoWindow;
 var myMarker = 'me.png';
 var lm = 'landmarker.png';
 
+
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 12,
@@ -58,7 +59,7 @@ function render() {
 function getServerData()
 {
 	request = new XMLHttpRequest();
-	request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+	request.open("POST", "https://radiant-sea-55408.herokuapp.com/sendLocation", true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 	dataObj = null;
