@@ -29,7 +29,7 @@ have probably played it much safer and in the end would not have learned that mu
 Example: 
 I have started using git on all my classes (even for my essays), just because it is
 so useful. This goes to show how important and helpful this information has actually
-been to my life.
+been to my work.
 
 ### What topic would I like to delve deeper
 I really enjoyed the last couple lectures on web security. It is definitely something
