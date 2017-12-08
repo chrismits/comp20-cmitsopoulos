@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" href="style.css"/>
 	<title>Security Assessment</title>
 </head>
 <body>
@@ -27,9 +28,18 @@
 			
 		</p>
 	<h2>Issues Found</h2>
-		<p>
-			TO DO MY GUY
-		</p>
+		<h3>Issue #1: Cross Site Scripting @/sendLocation</h3>
+		<ul>
+			<li>Location: Page that displays past checkins. Code: index.js at the /sendLocation POST request (line 19).</li>
+			<li>Severity: VERY HIGH. Affects all users viewing https://guarded-fjord-97859.herokuapp.com/ and can lead to malicious code being run on the victim's browser.</li>
+			<li>Description: The mainpage for the guarded-fjord app displays all past checkins(lat, lng and time) as per the specifications of assignment #4. This information is therefore echoed to all users visiting the site. I inspected the code that handles user input for later insertion to the mongo database:
+			<img src="sendlocation.png" alt="code that handles user input"> <br>As seen above, the checkin variables are taken directly from user input without any input validation(other than if they are not undefined), and are later added to the database and displayed on the webpage. Let's see what happens when a simple script is added as user input instead of an actual username. I ran the following post request using curl:
+			<img src="curlLocation.png" alt="curl command for injection">
+			Now let's see the results when you visit the checkin page with your browser:
+			</li>
+
+		</ul>
+
 	<h2>Conclusion</h2>
 		<p>
 			TO DO MY GUY
