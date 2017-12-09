@@ -28,17 +28,54 @@
 			
 		</p>
 	<h2>Issues Found</h2>
-		<h3>Issue #1: Cross Site Scripting @/sendLocation</h3>
+		<h3>Issue #1: Cross Site Scripting @/sendLocation Vulnerability</h3>
 		<ul>
-			<li>Location: Page that displays past checkins. Code: index.js at the /sendLocation POST request (line 19).</li>
-			<li>Severity: VERY HIGH. Affects all users viewing https://guarded-fjord-97859.herokuapp.com/ and can lead to malicious code being run on the victim's browser.</li>
+			<li>Location: Page that displays past checkins (https://guarded-fjord-97859.herokuapp.com/). Code: index.js at the /sendLocation POST request (line 19).</li>
+			<li>Severity: VERY HIGH. Affects all users viewing the page and can lead to malicious code being run on the victim's browser.</li>
 			<li>Description: The mainpage for the guarded-fjord app displays all past checkins(lat, lng and time) as per the specifications of assignment #4. This information is therefore echoed to all users visiting the site. I inspected the code that handles user input for later insertion to the mongo database:
-			<img src="sendlocation.png" alt="code that handles user input"> <br>As seen above, the checkin variables are taken directly from user input without any input validation(other than if they are not undefined), and are later added to the database and displayed on the webpage. Let's see what happens when a simple script is added as user input instead of an actual username. I ran the following post request using curl:
-			<img src="curlLocation.png" alt="curl command for injection">
-			Now let's see the results when you visit the checkin page with your browser:
+			<img src="sendlocation.png" alt="code that handles user input"> <br>As seen above, the checkin inputs (request.body.login etc.) are taken directly from user input without any input validation(other than if they are not undefined), and are later added to the database and displayed on the webpage. Let's see what happens when a simple script is added as user input instead of an actual username. I ran the following post request using curl: <br>
+			<img src="curlLocation.png" alt="curl command for injection"> <br>
+			Now, when you visit the checkin page with your browser this alert pops up: <br>
+			<img src="resultXSS.png" alt="browser alert due to injected script"> <br>
+			As expected, the browser executes the script and the alert pops up to all users. This goes to show that the webpage is easily vulnerable to cross site scripting attacks. An attacker can embed scripts that can present fraudulent content, steal cookie information and create annoying popups as demonstrated above, which goes to show what a major security issue this is.
+			</li>
+			<li>Resolution: The ability for data to be interpreted as code needs to be removed for this issue to be resolved. In this /sendLocation POST request, injection can only be done on the "login" input as "lat" and "lng" are ran through the parseFloat() javascript method that returns NaN if input is not a number(ie a string).
+			My recommendation is to parse login input to encode angle brackets (ie. replace < with &amp;lt and > with &amp;gt), which will avoid input being executed by the browser.
+			</li>
+			<li>References: This attack was inspired by the <a href="https://tuftsdev.github.io/WebProgramming/notes/web_security.html">comp20 security notes</a></li>
+		</ul>
+		<h3>Issue #2: Denial of Service style attack vulnerability</h3>
+		<ul>
+			<li>Location: Issue is apparent in assignment #2 map page.</li>
+			<li>Severity: Low. This attack burdens the functionality of the application but does not present a severe risk to the user.</li>
+			<li>Description: Essentially, if you flood the database with post requests of checkins, the map that is supposed to display landmarks and all user logins, will be full of user logins and basically unusable. What I had in mind with this attack initially, was to fill the database and drastically slow down the webpage. To do this, a bash script that runs curl requests was used (see references): <br>
+			<img src="ddosScript.png" alt="the DOS script"> <br>
+			This script performs continuous POST requests for random latitudes and longitudes. After running this script, here were the results: <br>
+			<img src="map.png" alt="landmarks page"> </li> <br>
+			Now imagine running this script for a while, or with multiple computers. The application will become unusable.
+			<li>Resolution: Uncertain. Maybe there is a way to restrict the number of post requests from the same source? I will have to look into that further.</li>
+			<li>References: While playing around with an attempt to do a DOS attack with Kostas Tsiampouris, we wrote this bash script together and played around with it. We found it pretty interesting so I decided to add it as an issue. <a href="https://stackoverflow.com/questions/17177390/is-there-any-limit-to-number-of-markers-that-can-be-placed-on-google-static-maps">More markers make map slower</a>
+			</li>
+		</ul>
+		<h3>Issue #3: Server memory usage attack vulnerability</h3>
+		<ul>
+			<li>Location: Global. Code: index.js at the /sendLocation POST request (line 19).</li>
+			<li>Severity: High. This attack can increase heroku memory slug usage and make it reach its maximum (500mb). Subsequently, longer boot times will be caused.</li>
+			<li>Description: While looking at the server side code and trying to find vulnerabilities, I noticed that there is no input validation on the login variable for the POST request (this is also why issue #1 is possible). The data from these requests is stored in the mongo database. So, theoretically, if you send multiple post requests (using bash script in issue #2 for example), with a login string that is really long, you can slow down functionality of a heroku app by depleting the memory capacity of the app.</li>
+			<li>Resolution: Create an upper bound for the maximum number of characters of the login string. <br>
+			Change this: <br>
+			<img src="issue3before.png" alt="previous code"> <br>
+			To this: <br>
+			<img src="issue3after.png" alt="redesigned code"> <br>
+			In other words, if the number of characters in the login string is greater than 12, the record is not inserted in the database and a JSON error message is returned. This recommendation will also reduce cross-site scripting vulnerabilities.
 			</li>
 
+
+
+
+			<li>References: <a href="https://ubuntuforums.org/showthread.php?t=591302">POST request limit</a>, <a href="https://devcenter.heroku.com/articles/limits">Heroku Limits</a></li>
 		</ul>
+
 
 	<h2>Conclusion</h2>
 		<p>
