@@ -1,8 +1,7 @@
 # Learning Portfolio
 
 ## Purpose of this repository
-This repository contains a portfolio of the work I have done for the Web Programming
-class.
+This repository contains a portfolio of the Web Programming work I have done
 
 ### Favorite Lab/Assignment
 My favorite assignment in this class is probably assignment #3 where we build a 
